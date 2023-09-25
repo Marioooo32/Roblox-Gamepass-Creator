@@ -40,7 +40,7 @@ window.title("Gamepass Creator")
 window.configure(bg="black")
 
 # Set the window size and center it on the screen
-window.geometry("400x350")
+window.geometry("400x380")
 window.eval('tk::PlaceWindow . center')
 
 # Create and position input labels and entry fields
@@ -81,6 +81,10 @@ create_button.pack(pady=10)
 # Create and position the result label
 result_label = tk.Label(window, text="", fg="red", bg="black")
 result_label.pack()
+
+# Create and position the credits label
+credits_label = tk.Label(window, text="Credits: Mario <3", fg="white", bg="black")
+credits_label.pack(side="bottom")
 
 # Start the GUI event loop
 window.mainloop()
