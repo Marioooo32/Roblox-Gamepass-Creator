@@ -1,6 +1,5 @@
 import requests
 import tkinter as tk
-from tkinter import filedialog
 
 def create_gamepass():
     game_id = game_id_entry.get()
@@ -8,10 +7,7 @@ def create_gamepass():
     auth_cookie = auth_cookie_entry.get()
     description = description_entry.get()
     price = price_entry.get()
-
-    if image_path:
-        with open(image_path, "rb") as file:
-            image_data = file.read()
+    asset_id = asset_id_entry.get()
 
     url = f"https://api.roblox.com/groups/{game_id}/game-passes"
 
@@ -27,27 +23,16 @@ def create_gamepass():
         "ProductId": game_id,
         "CurrencyType": 1,
         "CreatorType": "User",
-        "IconImageAssetId": 0,
+        "IconImageAssetId": int(asset_id),
         "IconImageAssetVersionId": 0
     }
 
-    if sale_status.get() == 0:
-        data["SaleStatus"] = 0
-    elif sale_status.get() == 1:
-        data["SaleStatus"] = 1
-
-    response = requests.post(url, headers=headers, json=data, files={"file": image_data})
+    response = requests.post(url, headers=headers, json=data)
 
     if response.status_code == 200:
         result_label.config(text="Gamepass created successfully!", fg="red")
     else:
         result_label.config(text="Failed to create gamepass.", fg="red")
-
-def select_image():
-    global image_path
-    image_path = filedialog.askopenfilename(initialdir="/", title="Select Image File", filetypes=(("Image files", "*.png *.jpg"), ("All files", "*.*")))
-    if image_path:
-        select_image_button.config(text="Image Selected", state="disabled")
 
 # Create the GUI window
 window = tk.Tk()
@@ -55,7 +40,7 @@ window.title("Gamepass Creator")
 window.configure(bg="black")
 
 # Set the window size and center it on the screen
-window.geometry("400x450")
+window.geometry("400x350")
 window.eval('tk::PlaceWindow . center')
 
 # Create and position input labels and entry fields
@@ -84,21 +69,10 @@ price_label.pack()
 price_entry = tk.Entry(window)
 price_entry.pack()
 
-# Create and position the sale status buttons
-sale_status_label = tk.Label(window, text="Sale Status:", fg="red", bg="black")
-sale_status_label.pack()
-
-sale_status = tk.IntVar()
-
-false_button = tk.Radiobutton(window, text="False", variable=sale_status, value=0, fg="red", bg="black")
-false_button.pack()
-
-true_button = tk.Radiobutton(window, text="True", variable=sale_status, value=1, fg="red", bg="black")
-true_button.pack()
-
-# Create and position the image selection button
-select_image_button = tk.Button(window, text="Select Image", command=select_image, bg="red", fg="black")
-select_image_button.pack(pady=10)
+asset_id_label = tk.Label(window, text="Asset ID:", fg="red", bg="black")
+asset_id_label.pack()
+asset_id_entry = tk.Entry(window)
+asset_id_entry.pack()
 
 # Create and position the create button
 create_button = tk.Button(window, text="Create Gamepass", command=create_gamepass, bg="red", fg="black")
